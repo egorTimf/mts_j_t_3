@@ -26,8 +26,10 @@ public class XmlAddressReader implements AddressReader {
                 while (xml.nextTag() == XMLStreamConstants.START_ELEMENT) {
                     xml.require(XMLStreamConstants.START_ELEMENT, null, "item");
                     onAddress.accept(Address.fromFields(
-                            xml.getAttributeValue(null, "city"), xml.getAttributeValue(null, "street"),
-                            xml.getAttributeValue(null, "house"), xml.getAttributeValue(null, "floor")));
+                            xml.getAttributeValue(null, "city"),
+                            xml.getAttributeValue(null, "street"),
+                            xml.getAttributeValue(null, "house"),
+                            xml.getAttributeValue(null, "floor")));
                     xml.nextTag();
                     xml.require(XMLStreamConstants.END_ELEMENT, null, "item");
                 }

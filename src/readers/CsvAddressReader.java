@@ -2,7 +2,6 @@ package readers;
 
 import java.io.IOException;
 import java.io.LineNumberReader;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -15,11 +14,12 @@ public class CsvAddressReader implements AddressReader {
 
     @Override
     public void read(Path path, Consumer<Address> onAddress) throws IOException {
-        try (var input = new LineNumberReader(Files.newBufferedReader(path, StandardCharsets.UTF_8))) {
+        try (var input = new LineNumberReader(Files.newBufferedReader(path))) {
             try {
                 List<String> header = readRow(input);
-                if (header == null || header.size() != COLUMNS.size() || !header.containsAll(COLUMNS)) {
-                    throw new IllegalArgumentException("Ожидаются столбцы city, street, house, floor.");
+                if (header == null || header.size() != COLUMNS.size()
+                        || !header.containsAll(COLUMNS)) {
+                    throw new IllegalArgumentException("Ожидаются столбцы " + COLUMNS + ".");
                 }
                 int city = header.indexOf("city");
                 int street = header.indexOf("street");
@@ -35,7 +35,8 @@ public class CsvAddressReader implements AddressReader {
                             row.get(house), row.get(floor)));
                 }
             } catch (IllegalArgumentException e) {
-                throw new IOException("CSV, строка " + input.getLineNumber() + ". " + e.getMessage(), e);
+                throw new IOException("CSV, строка " + input.getLineNumber()
+                        + ". " + e.getMessage(), e);
             }
         }
     }
